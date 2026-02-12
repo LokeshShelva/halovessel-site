@@ -33,6 +33,11 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Fetch GitHub repository data
+        run: yarn fetch-repos
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build Astro
         run: yarn build
 
