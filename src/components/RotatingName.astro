@@ -1,0 +1,94 @@
+---
+interface Props {
+	primaryText?: string;
+	secondaryText?: string;
+	class?: string;
+	suffix?: string;
+}
+
+const { 
+	primaryText = 'halovessel', 
+	secondaryText = 'Lokesh',
+	class: className = '',
+	suffix = ''
+} = Astro.props;
+
+const primaryLetters = primaryText.split('');
+const secondaryLetters = secondaryText.split('');
+const charDiff = Math.abs(primaryLetters.length - secondaryLetters.length);
+const shiftAmount = primaryLetters.length > secondaryLetters.length ? `-${charDiff * 0.6}ch` : `${charDiff * 0.6}ch`;
+---
+
+<span class:list={["rotating-name", className]}>
+	<span class="name-container name-primary">
+		{primaryLetters.map((letter, i) => (
+			<span class="letter" style={`--delay: ${i * 0.05}s`}>{letter}</span>
+		))}
+	</span>
+	<span class="name-container name-secondary">
+		{secondaryLetters.map((letter, i) => (
+			<span class="letter" style={`--delay: ${i * 0.05}s`}>{letter}</span>
+		))}
+	</span>
+	{suffix && <span class="suffix" style={`--shift: ${shiftAmount}`}>{suffix}</span>}
+</span>
+
+<style>
+	.rotating-name {
+		display: inline-block;
+		position: relative;
+		perspective: 800px;
+	}
+
+	.name-container {
+		display: inline-block;
+		white-space: nowrap;
+	}
+
+	.name-secondary {
+		position: absolute;
+		left: 0;
+		top: 0;
+	}
+
+	.letter {
+		display: inline-block;
+		backface-visibility: hidden;
+		animation: rotate3dLetter 4s ease-in-out infinite;
+		animation-delay: var(--delay);
+		transform-origin: 50% 50%;
+	}
+
+	.name-secondary .letter {
+		animation-delay: calc(-2s + var(--delay));
+	}
+
+	.suffix {
+		display: inline-block;
+		animation: moveSuffix 4s ease-in-out infinite;
+	}
+
+	@keyframes rotate3dLetter {
+		0%, 45% {
+			transform: rotateX(0deg);
+			opacity: 1;
+		}
+		50% {
+			transform: rotateX(90deg);
+			opacity: 0;
+		}
+		55%, 100% {
+			transform: rotateX(90deg);
+			opacity: 0;
+		}
+	}
+
+	@keyframes moveSuffix {
+		0%, 45% {
+			transform: translateX(0);
+		}
+		50%, 100% {
+			transform: translateX(var(--shift));
+		}
+	}
+</style>

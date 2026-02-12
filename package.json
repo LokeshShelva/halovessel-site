@@ -12,7 +12,10 @@
     "@astrojs/mdx": "^4.3.13",
     "@astrojs/rss": "^4.0.15",
     "@astrojs/sitemap": "^3.7.0",
+    "@iconify-json/lucide": "^1.2.90",
+    "@iconify-json/simple-icons": "^1.2.70",
     "astro": "^5.17.1",
+    "astro-icon": "^1.1.5",
     "sharp": "^0.34.3"
   }
 }

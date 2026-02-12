@@ -1,0 +1,85 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { SITE_TITLE } from '../../consts';
+import { projects } from '../../data/projects';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`Projects - ${SITE_TITLE}`} description="Open source projects and experiments." />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<nav class="breadcrumb">
+				<a href="/halovessel-site/">~</a>
+				<span class="sep">/</span>
+				<span>projects</span>
+			</nav>
+
+			<p class="page-desc">Open source projects, experiments, and tools.</p>
+
+			{projects.length > 0 ? (
+				<div class="projects-grid">
+					{projects.map(project => (
+						<ProjectCard
+							name={project.name}
+							description={project.description}
+							url={project.url}
+							tech={project.tech}
+							stars={project.stars}
+							forks={project.forks}
+						/>
+					))}
+				</div>
+			) : (
+				<div class="empty-state">
+					<span class="empty-prompt">$ ls projects/</span>
+					<p class="empty-text">ls: cannot access 'projects/': No such file or directory</p>
+				</div>
+			)}
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.page-desc {
+		font-size: 0.85rem;
+		color: var(--fg-muted);
+		margin-bottom: 2rem;
+	}
+
+	.projects-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+		gap: 0.75rem;
+	}
+
+	.empty-state {
+		padding: 2rem;
+		background: rgba(0, 0, 0, 0.2);
+		border-left: 2px solid var(--fg-dim);
+		border-radius: 2px;
+	}
+
+	.empty-prompt {
+		display: block;
+		font-family: var(--mono);
+		font-size: 0.8rem;
+		color: var(--fg-dim);
+		margin-bottom: 0.5rem;
+	}
+
+	.empty-text {
+		font-family: var(--mono);
+		font-size: 0.8rem;
+		color: var(--fg-dim);
+		margin: 0;
+		opacity: 0.8;
+	}
+</style>
