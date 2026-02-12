@@ -3,6 +3,10 @@
     {
       "url": "https://github.com/LokeshShelva/halovessel-site",
       "tech": "Astro"
+    },
+    {
+        "url": "https://github.com/LokeshShelva/qwik-ask",
+        "tech": "Tauri"
     }
   ]
 }
