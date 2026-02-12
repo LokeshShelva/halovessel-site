@@ -14,17 +14,17 @@ export interface SocialLink {
 export const SOCIAL_LINKS: SocialLink[] = [
     {
         label: 'GitHub',
-        url: 'https://github.com/halovessel',
+        url: 'https://github.com/LokeshShelva',
         icon: 'simple-icons:github',
     },
     {
         label: 'LinkedIn',
-        url: 'https://linkedin.com/in/halovessel',
+        url: 'https://linkedin.com/in/lokesh-shelva-516155190',
         icon: 'simple-icons:linkedin',
     },
     {
         label: 'Mail',
-        url: 'mailto:hello@halovessel.dev',
+        url: 'mailto:5shelva19@gmail.com',
         icon: 'lucide:mail',
     },
 ];

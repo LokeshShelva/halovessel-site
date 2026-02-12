@@ -20,7 +20,7 @@ const posts = (await getCollection('blog')).sort(
 		<Header />
 		<main>
 			<nav class="breadcrumb">
-				<a href="/halovessel-site/">~</a>
+				<a href="/">~</a>
 				<span class="sep">/</span>
 				<span>blog</span>
 			</nav>
@@ -28,7 +28,7 @@ const posts = (await getCollection('blog')).sort(
 			{posts.length > 0 ? (
 				<div class="blog-list">
 					{posts.map((post) => (
-						<a href={`/halovessel-site/blog/${post.id}/`} class="blog-item">
+						<a href={`/blog/${post.id}/`} class="blog-item">
 							<div class="blog-item-content">
 								<h2 class="blog-title">{post.data.title}</h2>
 								<p class="blog-description">{post.data.description}</p>

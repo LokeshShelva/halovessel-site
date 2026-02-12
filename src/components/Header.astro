@@ -5,9 +5,9 @@ import { Icon } from 'astro-icon/components';
 const pathname = Astro.url.pathname;
 
 const navLinks = [
-	{ href: '/halovessel-site/blog/', label: 'blog' },
-	{ href: '/halovessel-site/projects/', label: 'projects' },
-	{ href: '/halovessel-site/about/', label: 'about' },
+	{ href: '/blog/', label: 'blog' },
+	{ href: '/projects/', label: 'projects' },
+	{ href: '/about/', label: 'about' },
 ];
 
 function isActive(href: string) {
@@ -17,7 +17,7 @@ function isActive(href: string) {
 
 <header>
 	<nav>
-		<a href="/halovessel-site/" class="logo">
+		<a href="/" class="logo">
 			<span class="logo-prefix">~/</span>{SITE_TITLE.toLowerCase()}
 		</a>
 		<div class="nav-right">
