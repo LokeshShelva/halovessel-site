@@ -3,7 +3,7 @@
 
 export const SITE_TITLE = 'Halovessel';
 export const SITE_DESCRIPTION = 'Developer portfolio — projects, blog, and insights from my journey in tech.';
-export const GITHUB_URL = 'https://github.com/halovessel';
+export const GITHUB_URL = 'https://github.com/LokeshShelva';
 
 export interface SocialLink {
     label: string;
