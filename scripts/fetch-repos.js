@@ -35,7 +35,8 @@ async function fetchRepoData(owner, repo) {
 			url: data.html_url,
 			stars: data.stargazers_count,
 			forks: data.forks_count,
-			language: data.language
+			language: data.language,
+			topics: data.topics || []
 		};
 	} catch (error) {
 		console.warn(`Error fetching ${owner}/${repo}:`, error.message);
@@ -76,9 +77,10 @@ async function main() {
 				url: repoData.url,
 				tech: repoConfig.tech || repoData.language || 'Unknown',
 				stars: repoData.stars,
-				forks: repoData.forks
+				forks: repoData.forks,
+				tags: repoData.topics
 			});
-			console.log(`✓ ${repoData.name} - ⭐ ${repoData.stars} forks: ${repoData.forks}\n`);
+			console.log(`✓ ${repoData.name} - ⭐ ${repoData.stars} 🔀 ${repoData.forks} 🏷️  ${repoData.topics.length} tags\n`);
 		}
 	}
 
@@ -90,6 +92,7 @@ async function main() {
     tech: string;
     stars?: number;
     forks?: number;
+    tags?: string[];
 }
 
 export const projects: Project[] = ${JSON.stringify(projects, null, 4)};

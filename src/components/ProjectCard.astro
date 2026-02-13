@@ -1,4 +1,6 @@
 ---
+import { Icon } from 'astro-icon/components';
+
 interface Props {
 	name: string;
 	description: string;
@@ -6,17 +8,45 @@ interface Props {
 	tech: string;
 	stars?: number;
 	forks?: number;
+	tags?: string[];
 }
 
-const { name, description, url, tech, stars = 0, forks = 0 } = Astro.props;
+const { name, description, url, tech, stars = 0, forks = 0, tags = [] } = Astro.props;
 ---
 
 <a href={url} target="_blank" rel="noopener noreferrer" class="project-card">
 	<div class="card-inner">
-		<h3 class="card-title">{name}</h3>
+		<div class="card-header">
+			<h3 class="card-title">{name}</h3>
+			<Icon name="lucide:external-link" class="external-icon" size="14" />
+		</div>
 		<p class="card-desc">{description}</p>
+		{tags.length > 0 && (
+			<div class="card-tags">
+				{tags.slice(0, 3).map(tag => (
+					<span class="tag">{tag}</span>
+				))}
+			</div>
+		)}
 		<div class="card-bottom">
-			<span class="tag">{tech}</span>
+			<div class="tech-lang">
+				<span class="lang-dot"></span>
+				<span class="lang-name">{tech}</span>
+			</div>
+			<div class="card-stats">
+				{stars > 0 && (
+					<span class="stat">
+						<Icon name="lucide:star" size="12" />
+						{stars}
+					</span>
+				)}
+				{forks > 0 && (
+					<span class="stat">
+						<Icon name="lucide:git-fork" size="12" />
+						{forks}
+					</span>
+				)}
+			</div>
 		</div>
 	</div>
 </a>
@@ -45,11 +75,31 @@ const { name, description, url, tech, stars = 0, forks = 0 } = Astro.props;
 		height: 100%;
 	}
 
+	.card-header {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 0.5rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.external-icon {
+		color: var(--fg-dim);
+		flex-shrink: 0;
+		opacity: 0;
+		transition: opacity var(--transition), color var(--transition);
+	}
+
+	.project-card:hover .external-icon {
+		opacity: 1;
+		color: var(--fg-muted);
+	}
+
 	.card-title {
 		font-size: 1rem;
 		font-weight: 600;
 		color: var(--fg);
-		margin: 0 0 0.5rem 0;
+		margin: 0;
 		line-height: 1.4;
 		transition: color var(--transition);
 	}
@@ -61,7 +111,7 @@ const { name, description, url, tech, stars = 0, forks = 0 } = Astro.props;
 	.card-desc {
 		font-size: 0.8rem;
 		color: var(--fg-muted);
-		margin: 0 0 1rem 0;
+		margin: 0 0 0.75rem 0;
 		line-height: 1.7;
 		display: -webkit-box;
 		-webkit-line-clamp: 2;
@@ -70,9 +120,55 @@ const { name, description, url, tech, stars = 0, forks = 0 } = Astro.props;
 		flex: 1;
 	}
 
+	.card-tags {
+		display: flex;
+		gap: 0.4rem;
+		flex-wrap: wrap;
+		margin-bottom: 0.75rem;
+	}
+
 	.card-bottom {
 		display: flex;
 		align-items: center;
+		justify-content: space-between;
 		gap: 0.5rem;
+		margin-top: auto;
+	}
+
+	.tech-lang {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.lang-dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: var(--purple);
+		flex-shrink: 0;
+	}
+
+	.lang-name {
+		font-family: var(--mono);
+		font-size: 0.75rem;
+		color: var(--fg);
+		font-weight: 500;
+	}
+
+	.card-stats {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		margin-left: auto;
+	}
+
+	.stat {
+		font-family: var(--mono);
+		font-size: 0.7rem;
+		color: var(--fg-dim);
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
 	}
 </style>
