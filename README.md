@@ -1,62 +1,91 @@
-# Astro Starter Kit: Blog
+# halovessel-site
 
-```sh
-yarn create astro@latest -- --template blog
+Personal portfolio and blog built with Astro. A minimal, terminal-inspired design featuring blog posts, project showcases, and work experience.
+
+🔗 **Live Site**: The live site is [here](https://halovessel.com/)
+
+## Commands
+
+All commands are run from the root of the project:
+
+| Command            | Action                                            |
+| :----------------- | :------------------------------------------------ |
+| `yarn install`     | Install dependencies                              |
+| `yarn dev`         | Start local dev server at `localhost:4321`        |
+| `yarn build`       | Build production site to `./dist/`                |
+| `yarn preview`     | Preview build locally                             |
+| `yarn fetch-repos` | Fetch latest GitHub repo data and update projects |
+
+## GitHub Actions
+
+The site automatically deploys to GitHub Pages on push to `master`. The workflow:
+1. Fetches latest repository data from GitHub
+2. Builds the Astro site
+3. Deploys to GitHub Pages
+
+Documentation-only changes (`.md` files) don't trigger deployments.
+
+## Customization
+
+### Adding Blog Posts
+Create `.md` or `.mdx` files in `src/content/blog/`:
+
+```markdown
+---
+title: 'Your Post Title'
+description: 'Brief description'
+pubDate: 2026-02-13
+tags: ['tag1', 'tag2']
+---
+
+Your content here...
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+### Adding Projects
+Edit `repos.config.json` to add GitHub repositories:
 
-Features:
-
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-├── public/
-├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+```json
+{
+  "repos": [
+    {
+      "url": "https://github.com/username/repo",
+      "tech": "TypeScript"
+    }
+  ]
+}
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Then run `yarn fetch-repos` to update the data.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+### Adding Work Experience
+Edit `src/data/experience.ts`:
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+```typescript
+export const experiences: Experience[] = [
+  {
+    role: 'Your Role',
+    company: 'Company Name',
+    period: '2024 - Present',
+    description: 'What you did...',
+    command: 'git commit -m "awesome work"'
+  }
+];
+```
 
-Any static assets, like images, can be placed in the `public/` directory.
+##  Tech Stack
 
-## 🧞 Commands
+- **Framework**: [Astro](https://astro.build/)
+- **Styling**: CSS with custom properties
+- **Icons**: [Astro Icon](https://github.com/natemoo-re/astro-icon) with Lucide
+- **Deployment**: GitHub Pages
+- **CI/CD**: GitHub Actions
 
-All commands are run from the root of the project, from a terminal:
+## Credits
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `yarn install`             | Installs dependencies                            |
-| `yarn dev`             | Starts local dev server at `localhost:4321`      |
-| `yarn build`           | Build your production site to `./dist/`          |
-| `yarn preview`         | Preview your build locally, before deploying     |
-| `yarn astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `yarn astro -- --help` | Get help using the Astro CLI                     |
+- Highly inspired from [Meorx Portfolio](https://merox.dev/)
+- Built with [Astro](https://astro.build/)
+- Icons from [Lucide](https://lucide.dev/)
 
-## 👀 Want to learn more?
+---
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## Credit
-
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+**Made with ❤️ by Lokesh Shelva (@halovessel)**

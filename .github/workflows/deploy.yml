@@ -3,6 +3,12 @@ name: Deploy Astro site to GitHub Pages
 on:
   push:
     branches: [master]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'scripts/README.md'
+      - 'src/data/README.md'
+      - 'LICENSE'
   workflow_dispatch:
 
 permissions:
