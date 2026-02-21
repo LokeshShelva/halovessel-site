@@ -2,6 +2,7 @@
 title: How I Set Up My Portfolio
 description: This blog outlines the loop and hoops I had to go through to get this portfolio site up.
 pubDate: 'Feb 15 2026'
+article: false
 ---
 
 I have been procrastinating building my portfolio and blog site for way too long. I kept telling myself I would start “soon.” Eventually, soon had to become now. 
@@ -15,7 +16,7 @@ This was the easiest part of the whole process. I took heavy inspiration from [M
 I used [Astro](https://astro.build/). This is my first time using it and I took pretty heavy help from Claude 4.6. Claude helped me with most of 
 the styles and bootstrapping the project. I am pretty happy with how it turned out. 
 
-## Making it go live
+### Making it go live
 
 This is where the challenge was. I had some experience working with Azure and setting up private networks in it. But I had no experience
 with setting up a public-facing website. I knew the basics and jumped into it blind, hoping I could Google my way through it. 
@@ -31,7 +32,7 @@ They made it super easy to move the domain and change the nameservers. Once it w
 After waiting for the DNS to propagate and the nameservers to update, I was able to see my site live. Uff, it was a long process but it was worth it. 
 I am happy with how the site turned out and I am excited to share my projects and thoughts here.
 
-## The Future
+#### The Future
 
 Well, I plan to write regularly here about my projects and learnings. I am trying to post at least once a week about something I learned or built. That is the goal at least.
 

@@ -1,0 +1,139 @@
+---
+interface Props {
+	headings: Array<{ depth: number; slug: string; text: string }>;
+}
+
+const { headings } = Astro.props;
+// Only show h2, h3 and h4 headings
+const tocItems = headings.filter((h) => h.depth === 2 || h.depth === 3 || h.depth === 4);
+---
+
+{tocItems.length > 0 && (
+	<nav class="toc" aria-label="Table of contents">
+		<span class="toc-title">On this page</span>
+		<ul>
+			{tocItems.map((heading) => (
+				<li class={`toc-item toc-h${heading.depth}`}>
+					<a href={`#${heading.slug}`} data-heading={heading.slug}>
+						{heading.text}
+					</a>
+				</li>
+			))}
+		</ul>
+	</nav>
+)}
+
+<script>
+	function initToc() {
+		const tocLinks = document.querySelectorAll<HTMLAnchorElement>('.toc a[data-heading]');
+		const headingElements: HTMLElement[] = [];
+
+		tocLinks.forEach((link) => {
+			const slug = link.dataset.heading;
+			if (slug) {
+				const el = document.getElementById(slug);
+				if (el) headingElements.push(el);
+			}
+		});
+
+		if (headingElements.length === 0) return;
+
+		const setActive = (slug: string) => {
+			tocLinks.forEach((link) => {
+				if (link.dataset.heading === slug) {
+					link.classList.add('active');
+				} else {
+					link.classList.remove('active');
+				}
+			});
+		};
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (entry.isIntersecting) {
+						setActive(entry.target.id);
+						break;
+					}
+				}
+			},
+			{
+				rootMargin: '-80px 0px -70% 0px',
+				threshold: 0,
+			}
+		);
+
+		headingElements.forEach((el) => observer.observe(el));
+
+		// Set initial active state
+		if (headingElements.length > 0) {
+			setActive(headingElements[0].id);
+		}
+	}
+
+	// Run on page load and view transitions
+	initToc();
+	document.addEventListener('astro:after-swap', initToc);
+</script>
+
+<style>
+	.toc {
+		position: sticky;
+		top: calc(var(--header-height) + 2rem);
+		max-height: calc(100vh - var(--header-height) - 4rem);
+		overflow-y: auto;
+		padding-top: 0.5rem;
+	}
+
+	.toc-title {
+		display: block;
+		font-family: var(--mono);
+		font-size: 0.7rem;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--fg-dim);
+		margin-bottom: 0.75rem;
+		padding-left: 0.75rem;
+	}
+
+	.toc ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		border-left: 1px solid var(--border);
+	}
+
+	.toc-item {
+		margin: 0;
+	}
+
+	.toc-item a {
+		display: block;
+		padding: 0.3rem 0.75rem;
+		font-family: var(--mono);
+		font-size: 0.7rem;
+		color: var(--fg-dim);
+		text-decoration: none;
+		border-left: 2px solid transparent;
+		margin-left: -1px;
+		transition: color var(--transition), border-color var(--transition);
+		line-height: 1.5;
+	}
+
+	.toc-h3 a {
+		padding-left: 1.5rem;
+	}
+
+    .toc-h4 a {
+        padding-left: 3rem;
+    }
+
+	.toc-item a:hover {
+		color: var(--fg-muted);
+	}
+
+	.toc-item a:global(.active) {
+		color: var(--fg);
+		border-left-color: var(--purple);
+	}
+</style>

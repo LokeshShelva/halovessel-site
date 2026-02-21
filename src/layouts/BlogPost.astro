@@ -4,10 +4,14 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import TableOfContents from '../components/TableOfContents.astro';
 
-type Props = CollectionEntry<'blog'>['data'];
+type Props = CollectionEntry<'blog'>['data'] & {
+	article?: boolean;
+	headings?: Array<{ depth: number; slug: string; text: string }>;
+};
 
-const { title, description, pubDate, updatedDate, tags = [] } = Astro.props;
+const { title, description, pubDate, updatedDate, tags = [], article = false, headings = [] } = Astro.props;
 ---
 
 <html lang="en">
@@ -16,47 +20,117 @@ const { title, description, pubDate, updatedDate, tags = [] } = Astro.props;
 	</head>
 	<body>
 		<Header />
-		<main>
-			<article class="prose">
-				<nav class="breadcrumb">
-					<a href="/">~</a>
-					<span class="sep">/</span>
-					<a href="/blog/">blog</a>
-					<span class="sep">/</span>
-					<span>{title.toLowerCase().slice(0, 30)}</span>
-				</nav>
+		<main class={article ? 'main-article' : ''}>
+			{article ? (
+				<div class="post-layout">
+					<article class="prose">
+						<nav class="breadcrumb">
+							<a href="/">~</a>
+							<span class="sep">/</span>
+							<a href="/blog/">blog</a>
+							<span class="sep">/</span>
+							<span>{title.toLowerCase().slice(0, 30)}</span>
+						</nav>
 
-				<header class="post-header">
-					<h1>{title}</h1>
-					<div class="post-meta">
-						<span class="meta-date">
-							<FormattedDate date={pubDate} />
-						</span>
-						{updatedDate && (
-							<span class="meta-updated">
-								Updated: <FormattedDate date={updatedDate} />
-							</span>
-						)}
-					</div>
-					{tags.length > 0 && (
-						<div class="post-tags">
-							{tags.map((t: string) => (
-								<span class="tag">{t}</span>
-							))}
+						<header class="post-header">
+							<h1>{title}</h1>
+							<div class="post-meta">
+								<span class="meta-date">
+									<FormattedDate date={pubDate} />
+								</span>
+								{updatedDate && (
+									<span class="meta-updated">
+										Updated: <FormattedDate date={updatedDate} />
+									</span>
+								)}
+							</div>
+							{tags.length > 0 && (
+								<div class="post-tags">
+									{tags.map((t: string) => (
+										<span class="tag">{t}</span>
+									))}
+								</div>
+							)}
+						</header>
+
+						<div class="post-content">
+							<slot />
 						</div>
-					)}
-				</header>
-
-				<div class="post-content">
-					<slot />
+					</article>
+					<aside class="toc-sidebar">
+						<TableOfContents headings={headings} />
+					</aside>
 				</div>
-			</article>
+			) : (
+				<article class="prose">
+					<nav class="breadcrumb">
+						<a href="/">~</a>
+						<span class="sep">/</span>
+						<a href="/blog/">blog</a>
+						<span class="sep">/</span>
+						<span>{title.toLowerCase().slice(0, 30)}</span>
+					</nav>
+
+					<header class="post-header">
+						<h1>{title}</h1>
+						<div class="post-meta">
+							<span class="meta-date">
+								<FormattedDate date={pubDate} />
+							</span>
+							{updatedDate && (
+								<span class="meta-updated">
+									Updated: <FormattedDate date={updatedDate} />
+								</span>
+							)}
+						</div>
+						{tags.length > 0 && (
+							<div class="post-tags">
+								{tags.map((t: string) => (
+									<span class="tag">{t}</span>
+								))}
+							</div>
+						)}
+					</header>
+
+					<div class="post-content">
+						<slot />
+					</div>
+				</article>
+			)}
 		</main>
 		<Footer />
 	</body>
 </html>
 
 <style>
+	.main-article {
+		max-width: calc(var(--max-width) + 220px + 3rem);
+	}
+
+	.post-layout {
+		display: grid;
+		grid-template-columns: 1fr 220px;
+		gap: 3rem;
+	}
+
+	.toc-sidebar {
+		padding-top: 0;
+	}
+
+	@media (max-width: 1200px) {
+		.main-article {
+			max-width: var(--max-width);
+		}
+
+		.post-layout {
+			grid-template-columns: 1fr;
+		}
+
+		.toc-sidebar {
+			display: none;
+		}
+	}
+
 	.post-header {
 		margin-bottom: 2.5rem;
 		padding-bottom: 1.5rem;
