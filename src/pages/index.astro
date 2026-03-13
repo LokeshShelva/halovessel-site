@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
-import BlogCard from '../components/BlogCard.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import ScrollReveal from '../components/ScrollReveal.astro';
@@ -10,10 +9,20 @@ import { Icon } from 'astro-icon/components';
 
 const posts = (await getCollection('blog'))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-	.slice(0, 6);
+	.slice(0, 3);
 
-// Assign bento sizes: first = large, second = tall, rest = small
-const bentoSizes = ['large', 'tall', 'small', 'small', 'medium', 'small'];
+// Tag color map
+const tagColors: Record<string, string> = {
+	tauri: 'tag-yellow',
+	rust: 'tag-mint',
+	astro: 'tag-lilac',
+	guide: 'tag-orange',
+	devlog: 'tag-pink',
+};
+
+function getTagClass(tag: string) {
+	return tagColors[tag.toLowerCase()] || 'tag-default';
+}
 ---
 
 <!doctype html>
@@ -24,69 +33,81 @@ const bentoSizes = ['large', 'tall', 'small', 'small', 'medium', 'small'];
 	<body>
 		<Header />
 		<main class="home-main">
-			<section class="hero-split">
-				<!-- Hero with entrance animations -->
-				<div class="hero-content">
-					<div class="prompt animate-fade-up delay-1">
-						<span class="user">halovessel</span><span class="at">@</span><span class="host">lokesh</span><span class="colon">:</span><span class="path">~</span><span class="dollar"> $</span>
-					</div>
-					<h1 class="hero-cmd animate-fade-up delay-2">
-						build <span class="flag">--with</span> <span class="str">"passion"</span><span class="cursor"></span>
-					</h1>
-					<p class="hero-output animate-fade-up delay-3">
-						I'm Lokesh Shelva, developer and builder. Exploring code, shipping projects, and writing about the process. Everything starts at the terminal.
-					</p>
-					<div class="hero-links animate-fade-up delay-4">
-						<a href="/blog/" class="link-cmd link-primary">cat blog.md</a>
-						<a href="/about/" class="link-cmd link-ghost">whoami</a>
-					</div>
-					<div class="hero-social animate-fade-up delay-5">
-						{SOCIAL_LINKS.map(link => (
-							<a href={link.url} target={link.url.startsWith('mailto:') ? undefined : '_blank'} rel={link.url.startsWith('mailto:') ? undefined : 'noopener noreferrer'} class="hero-social-icon" aria-label={link.label} title={link.label}>
-								<Icon name={link.icon} size="20" />
-							</a>
-						))}
-					</div>
+
+			<!-- Hero -->
+			<section class="hero">
+				<div class="sticker-row animate-pop-in delay-1">
+					<span class="sticker sticker-hover tag-mint">curious</span>
+					<span class="sticker sticker-hover tag-yellow">open source</span>
+					<span class="sticker sticker-hover tag-lilac">nerd</span>
+					<span class="sticker sticker-hover tag-pink">terminal is home</span>
+					<span class="sticker sticker-hover tag-orange">building in public</span>
 				</div>
 
-				<!-- Terminal divider -->
-				<div class="section-divider animate-fade-in delay-6">
-					<span class="divider-prompt">$</span>
-					<span class="divider-cmd">ls blogs/</span>
-					<span class="divider-line"></span>
+				<div class="hero-eyebrow animate-fade-up delay-2">
+					hi, i'm <span class="accent">lokesh shelva</span> —
+				</div>
+				<h1 class="hero-name animate-fade-up delay-3">
+					developer &<br><span class="squiggle">builder</span>
+				</h1>
+
+				<p class="hero-sub animate-fade-up delay-4">
+					builds tools nobody asked for. writes about it anyway.<br>
+					<strong>powered by mass amounts of caffeine and curiosity.</strong><br>
+					currently over-engineering something simple.
+				</p>
+
+				<div class="cta-row animate-fade-up delay-5">
+					<a href="mailto:5shelva19@gmail.com" class="cta cta-primary">say hello</a>
+					<a href="/blog/" class="cta cta-ghost">read my writing</a>
+					<a href="/projects/" class="cta cta-ghost">see my builds</a>
 				</div>
 
-				<!-- Posts with scroll-reveal -->
-				<ScrollReveal class="posts-peek reveal-stagger">
-					{posts.length > 0 ? (
-						<>
-							<div class="bento-grid">
-								{posts.map((post, i) => (
-									<div class="reveal" style={`--reveal-i: ${i}`}>
-										<BlogCard
-											title={post.data.title}
-											description={post.data.description}
-											date={post.data.pubDate}
-											tags={post.data.tags}
-											slug={post.id}
-											size={bentoSizes[i] || 'small'}
-										/>
-									</div>
-								))}
-							</div>
-							<a href="/blog/" class="view-all reveal" style="--reveal-i: 6">
-								<span>View all posts</span>
-								<span class="arrow">→</span>
-							</a>
-						</>
-					) : (
-						<div class="empty-state reveal">
-							<span class="empty-prompt">$ ls blogs/</span>
-							<p class="empty-text">ls: cannot access 'blogs/': No such file or directory</p>
-						</div>
-					)}
-				</ScrollReveal>
+				<div class="scroll-hint animate-fade-in delay-7">
+					↓ scroll to see what's been <span class="accent">cooking</span>
+				</div>
 			</section>
+
+			<!-- Recent writing -->
+			<div class="divider animate-fade-in delay-8">recent writing</div>
+
+
+			<ScrollReveal class="section reveal-stagger">
+				{posts.length > 0 ? (
+					<>
+						<div class="post-list">
+							{posts.map((post, i) => (
+								<a href={`/blog/${post.id}/`} class="post-card accent-bar reveal" style={`--reveal-i: ${i}`}>
+									<div class="post-meta">
+										{post.data.tags?.map(tag => (
+											<span class:list={['post-tag', getTagClass(tag)]}>{tag}</span>
+										))}
+										<span class="post-date">
+											{post.data.pubDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+										</span>
+									</div>
+									<div class="post-title">{post.data.title}</div>
+									<div class="post-excerpt">{post.data.description}</div>
+									<div class="post-footer">
+										<span class="post-arrow">read →</span>
+									</div>
+								</a>
+							))}
+						</div>
+						<a href="/blog/" class="view-all reveal" style="--reveal-i: 4">
+							<span>all writing</span>
+							<span class="arrow">→</span>
+						</a>
+					</>
+				) : (
+					<div class="empty-state reveal">
+						<span class="empty-prompt">$ ls blogs/</span>
+						<p class="empty-text">ls: cannot access 'blogs/': No such file or directory</p>
+					</div>
+				)}
+			</ScrollReveal>
+
+
 		</main>
 		<Footer />
 	</body>
@@ -96,152 +117,228 @@ const bentoSizes = ['large', 'tall', 'small', 'small', 'medium', 'small'];
 	.home-main {
 		max-width: var(--max-width);
 		margin: 0 auto;
-		padding: 0 2rem;
+		padding: 0 24px;
 		min-height: calc(100vh - var(--header-height) - 100px);
 	}
 
-	.hero-split {
-		min-height: calc(100vh - var(--header-height));
-		display: flex;
-		flex-direction: column;
-	}
-
-	/* Hero takes ~60% of viewport */
-	.hero-content {
-		min-height: 60vh;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		padding: 3rem 0 2rem;
+	/* Hero */
+	.hero {
+		padding: 48px 0 36px;
 		position: relative;
 	}
 
-	.prompt {
-		font-family: var(--mono);
-		font-size: 0.8rem;
-		color: var(--fg-muted);
-		margin-bottom: 0.5rem;
+	.sticker-row {
+		display: flex;
+		gap: 8px;
+		flex-wrap: wrap;
+		margin-bottom: 28px;
 	}
-	.prompt .user { color: var(--purple); }
-	.prompt .at { color: var(--fg-dim); }
-	.prompt .host { color: var(--fg-muted); }
-	.prompt .colon, .prompt .path { color: var(--fg-dim); }
-	.prompt .dollar { color: var(--fg-dim); }
 
-	.hero-cmd {
-		font-family: var(--mono);
-		font-size: clamp(1.8rem, 5vw, 3rem);
+	.sticker {
+		font-size: 10px;
 		font-weight: 700;
+		padding: 3px 9px;
+		border-radius: 2px;
+		letter-spacing: 0.05em;
+		display: inline-block;
+	}
+
+	.hero-eyebrow {
+		font-size: 11px;
+		color: var(--fg-dim);
+		margin-bottom: 10px;
+		letter-spacing: 0.04em;
+	}
+
+	.accent {
+		color: var(--accent);
+	}
+
+	.hero-name {
+		font-size: clamp(32px, 8vw, 42px);
+		font-weight: 700;
+		line-height: 1;
 		color: var(--fg);
-		line-height: 1.3;
-		margin-bottom: 1rem;
+		margin-bottom: 6px;
+		letter-spacing: -0.03em;
 	}
-	.hero-cmd .flag { color: var(--fg); }
-	.hero-cmd .str { color: var(--fg-muted); }
 
-	.hero-output {
+	.squiggle {
+		display: inline-block;
+		color: var(--accent);
+		text-decoration: underline;
+		text-decoration-style: wavy;
+		text-decoration-color: var(--accent);
+		text-underline-offset: 6px;
+	}
+
+	.hero-sub {
+		font-size: 13px;
 		color: var(--fg-muted);
-		font-size: 1rem;
-		margin-bottom: 2.5rem;
-		max-width: 550px;
-		line-height: 1.8;
+		line-height: 1.7;
+		max-width: 450px;
+		margin: 18px 0 28px;
 	}
 
-	.hero-links { display: flex; gap: 1rem; }
+	.hero-sub strong {
+		color: var(--fg);
+		font-weight: 700;
+	}
 
-	.hero-social {
+	.cta-row {
 		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		margin-top: 1.5rem;
+		gap: 10px;
+		flex-wrap: wrap;
+		margin-bottom: 24px;
 	}
 
-	.hero-social-icon {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 0.35rem;
-		color: var(--fg-dim);
-		text-decoration: none;
-		transition: color 0.2s ease, transform 0.2s ease;
-	}
-
-	.hero-social-icon:hover {
-		color: var(--fg-muted);
-		transform: translateY(-2px);
-	}
-
-	.link-cmd {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.5rem;
-		padding: 0.6rem 1.25rem;
+	.cta {
+		padding: 9px 18px;
 		font-family: var(--mono);
-		font-size: 0.8rem;
+		font-size: 12px;
+		font-weight: 700;
+		cursor: pointer;
+		border-radius: 3px;
+		transition: all 0.12s ease;
+		letter-spacing: 0.02em;
 		text-decoration: none;
-		border-radius: var(--radius);
-		transition: all 0.2s ease, transform 0.2s ease;
 	}
-	.link-primary {
-		background: rgba(199, 160, 255, 0.08);
-		color: var(--purple);
-		border: 1px solid rgba(199, 160, 255, 0.2);
+
+	.cta-primary {
+		background: var(--accent);
+		color: #fff;
+		border: none;
 	}
-	.link-primary:hover {
-		background: rgba(199, 160, 255, 0.18);
-		border-color: rgba(199, 160, 255, 0.4);
-		transform: translateY(-2px);
+
+	.cta-primary:hover {
+		background: var(--accent-2);
+		color: #fff;
 	}
-	.link-ghost {
+
+	.cta-ghost {
+		background: transparent;
 		color: var(--fg-muted);
-		border: 1px solid var(--border);
-	}
-	.link-ghost:hover { border-color: var(--fg-dim); color: var(--fg); transform: translateY(-2px); }
-
-	/* Posts peek — deliberately extends beyond viewport fold */
-	.posts-peek {
-		padding: 1rem 0 3rem;
+		border: 1.5px dashed var(--border-2);
 	}
 
-	/* Terminal divider */
-	.section-divider {
+	.cta-ghost:hover {
+		border-color: var(--fg-dim);
+		color: var(--fg);
+	}
+
+	.scroll-hint {
+		font-size: 10px;
+		color: var(--fg-dim);
+		letter-spacing: 0.06em;
+		margin-top: 8px;
+	}
+
+	/* Divider */
+	.divider {
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
-		padding: 1.5rem 0;
+		gap: 12px;
+		padding: 0;
+		margin: 4px 0 24px;
 		font-family: var(--mono);
-		font-size: 0.75rem;
-	}
-
-	.divider-prompt {
+		font-size: 10px;
 		color: var(--fg-dim);
+		letter-spacing: 0.08em;
 	}
 
-	.divider-cmd {
-		color: var(--fg-muted);
-		white-space: nowrap;
-	}
-
-	.divider-line {
+	.divider::before,
+	.divider::after {
+		content: '';
 		flex: 1;
 		height: 1px;
-		background: var(--border);
+		background: var(--border-2);
 	}
 
-	.sec-head {
-		font-family: var(--mono);
-		font-size: 0.75rem;
+	/* Section */
+	.section {
+		padding: 28px 0;
+	}
+
+	/* Post cards */
+	.post-list {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+	}
+
+	.post-card {
+		display: block;
+		border: 1.5px dashed var(--border-2);
+		border-radius: var(--radius);
+		padding: 20px;
+		cursor: pointer;
+		transition: all 0.15s ease;
+		text-decoration: none;
+		color: inherit;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.post-card:hover {
+		background: var(--bg-card);
+	}
+
+	.post-meta {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-bottom: 10px;
+		flex-wrap: wrap;
+	}
+
+	.post-tag {
+		font-size: 9px;
+		font-weight: 700;
+		padding: 2px 7px;
+		border-radius: 2px;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		border: 1px solid;
+	}
+
+	.post-date {
+		font-size: 10px;
+		color: var(--fg-dim);
+	}
+
+	.post-title {
+		font-size: 15px;
+		font-weight: 700;
+		color: var(--fg);
+		margin-bottom: 6px;
+		line-height: 1.3;
+	}
+
+	.post-excerpt {
+		font-size: 11px;
 		color: var(--fg-muted);
-		margin-bottom: 1.5rem;
+		line-height: 1.7;
 	}
 
-	/* Bento grid */
-	.bento-grid {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 0.75rem;
+	.post-footer {
+		margin-top: 12px;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
 	}
 
+	.post-arrow {
+		font-size: 11px;
+		color: var(--accent);
+		opacity: 0;
+		transition: opacity 0.15s ease;
+	}
+
+	.post-card:hover .post-arrow {
+		opacity: 1;
+	}
+
+	/* View all */
 	.view-all {
 		display: flex;
 		align-items: center;
@@ -249,24 +346,17 @@ const bentoSizes = ['large', 'tall', 'small', 'small', 'medium', 'small'];
 		gap: 0.5rem;
 		margin-top: 2rem;
 		font-family: var(--mono);
-		font-size: 0.8rem;
-		color: var(--fg-muted);
+		font-size: 11px;
+		color: var(--fg-dim);
 		text-decoration: none;
 		transition: color var(--transition);
 	}
 
-	.view-all:hover {
-		color: var(--fg);
-	}
+	.view-all:hover { color: var(--fg); }
+	.view-all .arrow { transition: transform 0.25s ease; }
+	.view-all:hover .arrow { transform: translateX(3px); }
 
-	.view-all .arrow {
-		transition: transform var(--transition);
-	}
-
-	.view-all:hover .arrow {
-		transform: translateX(3px);
-	}
-
+	/* Empty state */
 	.empty-state {
 		padding: 2rem;
 		background: rgba(0, 0, 0, 0.2);
@@ -277,31 +367,23 @@ const bentoSizes = ['large', 'tall', 'small', 'small', 'medium', 'small'];
 	.empty-prompt {
 		display: block;
 		font-family: var(--mono);
-		font-size: 0.8rem;
+		font-size: 11px;
 		color: var(--fg-dim);
 		margin-bottom: 0.5rem;
 	}
 
 	.empty-text {
 		font-family: var(--mono);
-		font-size: 0.8rem;
+		font-size: 11px;
 		color: var(--fg-dim);
 		margin: 0;
 		opacity: 0.8;
 	}
 
-	@media (max-width: 768px) {
-		.bento-grid {
-			grid-template-columns: repeat(2, 1fr);
-		}
-	}
-
 	@media (max-width: 640px) {
 		.home-main { padding: 0 1rem; }
-		.hero-content { min-height: 55vh; padding: 2rem 0; }
-		.hero-links { flex-direction: column; }
-		.bento-grid {
-			grid-template-columns: 1fr;
-		}
+		.hero { padding: 32px 0 24px; }
+		.cta-row { flex-direction: column; }
+		.hero-name { font-size: 28px; }
 	}
 </style>

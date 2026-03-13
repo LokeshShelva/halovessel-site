@@ -1,6 +1,6 @@
 /* =============================================
    Animation Utilities
-   Entrance + Scroll-reveal animations
+   Entrance + Scroll-reveal + Fun interactions
    ============================================= */
 
 /* --- Fade Up (entrance) --- */
@@ -45,6 +45,34 @@
   }
 }
 
+/* --- Pulse glow --- */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* --- Wiggle --- */
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg); }
+  75% { transform: rotate(3deg); }
+}
+
+/* --- Pop In --- */
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
+  60% {
+    transform: scale(1.02) translateY(-2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
 /* --- Entrance animation classes --- */
 .animate-fade-up {
   animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -62,6 +90,10 @@
   animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+.animate-pop-in {
+  animation: popIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* --- Stagger delays --- */
 .delay-1 { animation-delay: 0.1s; }
 .delay-2 { animation-delay: 0.2s; }
@@ -71,6 +103,29 @@
 .delay-6 { animation-delay: 0.6s; }
 .delay-7 { animation-delay: 0.7s; }
 .delay-8 { animation-delay: 0.8s; }
+
+/* --- Fun hover interactions --- */
+.hover-wiggle:hover {
+  animation: wiggle 0.4s ease;
+}
+
+.hover-lift {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* --- Sticker hover (tilt + scale) --- */
+.sticker-hover {
+  transition: transform 0.15s ease;
+  cursor: default;
+}
+
+.sticker-hover:hover {
+  transform: rotate(-2deg) scale(1.05);
+}
 
 /* --- Scroll-reveal: elements start hidden --- */
 .reveal {
@@ -90,12 +145,36 @@
   transition-delay: calc(var(--reveal-i, 0) * 0.08s);
 }
 
+/* --- Accent left-bar on hover (for cards) --- */
+.accent-bar {
+  position: relative;
+  overflow: hidden;
+}
+
+.accent-bar::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: bottom;
+}
+
+.accent-bar:hover::before {
+  transform: scaleY(1);
+}
+
 /* Reduced motion: skip all animations */
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up,
   .animate-fade-in,
   .animate-slide-left,
-  .animate-scale-in {
+  .animate-scale-in,
+  .animate-pop-in {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
@@ -105,5 +184,11 @@
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+  }
+
+  .sticker-hover:hover,
+  .hover-wiggle:hover {
+    transform: none !important;
+    animation: none !important;
   }
 }
