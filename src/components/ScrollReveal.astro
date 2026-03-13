@@ -1,0 +1,66 @@
+---
+/**
+ * ScrollReveal — wraps children and reveals them on scroll via IntersectionObserver.
+ * Usage:  <ScrollReveal><div>content</div></ScrollReveal>
+ * Add class="reveal" to individual children for staggered reveal.
+ */
+interface Props {
+  /** Extra class names */
+  class?: string;
+  /** Root margin for earlier/later trigger */
+  rootMargin?: string;
+  /** Threshold 0-1 */
+  threshold?: number;
+}
+
+const {
+  class: className = '',
+  rootMargin = '0px 0px -60px 0px',
+  threshold = 0.1,
+} = Astro.props;
+---
+
+<div
+  class:list={['scroll-reveal-root', className]}
+  data-root-margin={rootMargin}
+  data-threshold={String(threshold)}
+>
+  <slot />
+</div>
+
+<script>
+  function initScrollReveal() {
+    const roots = document.querySelectorAll<HTMLElement>('.scroll-reveal-root');
+
+    roots.forEach((root) => {
+      const margin = root.dataset.rootMargin || '0px 0px -60px 0px';
+      const thresh = parseFloat(root.dataset.threshold || '0.1');
+
+      // Find all .reveal elements inside this root
+      const reveals = root.querySelectorAll<HTMLElement>('.reveal');
+
+      // Assign stagger index
+      reveals.forEach((el, i) => {
+        el.style.setProperty('--reveal-i', String(i));
+      });
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('revealed');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: margin, threshold: thresh }
+      );
+
+      reveals.forEach((el) => observer.observe(el));
+    });
+  }
+
+  // Run on load + after Astro view transition swaps
+  initScrollReveal();
+  document.addEventListener('astro:after-swap', initScrollReveal);
+</script>

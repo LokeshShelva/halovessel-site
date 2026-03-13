@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
+import ScrollReveal from '../../components/ScrollReveal.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import { SITE_TITLE } from '../../consts';
 
@@ -19,35 +20,37 @@ const posts = (await getCollection('blog')).sort(
 	<body>
 		<Header />
 		<main>
-			<nav class="breadcrumb">
+			<nav class="breadcrumb animate-fade-up delay-1">
 				<a href="/">~</a>
 				<span class="sep">/</span>
 				<span>blog</span>
 			</nav>
 
 			{posts.length > 0 ? (
-				<div class="blog-list">
-					{posts.map((post) => (
-						<a href={`/blog/${post.id}/`} class="blog-item">
-							<div class="blog-item-content">
-								<h2 class="blog-title">{post.data.title}</h2>
-								<p class="blog-description">{post.data.description}</p>
-								{post.data.tags && post.data.tags.length > 0 && (
-									<div class="blog-tags">
-										{post.data.tags.map(tag => (
-											<span class="tag">{tag}</span>
-										))}
-									</div>
-								)}
-							</div>
-							<time datetime={post.data.pubDate.toISOString()} class="blog-date">
-								<FormattedDate date={post.data.pubDate} />
-							</time>
-						</a>
-					))}
-				</div>
+				<ScrollReveal class="reveal-stagger">
+					<div class="blog-list">
+						{posts.map((post, i) => (
+							<a href={`/blog/${post.id}/`} class="blog-item reveal" style={`--reveal-i: ${i}`}>
+								<div class="blog-item-content">
+									<h2 class="blog-title">{post.data.title}</h2>
+									<p class="blog-description">{post.data.description}</p>
+									{post.data.tags && post.data.tags.length > 0 && (
+										<div class="blog-tags">
+											{post.data.tags.map(tag => (
+												<span class="tag">{tag}</span>
+											))}
+										</div>
+									)}
+								</div>
+								<time datetime={post.data.pubDate.toISOString()} class="blog-date">
+									<FormattedDate date={post.data.pubDate} />
+								</time>
+							</a>
+						))}
+					</div>
+				</ScrollReveal>
 			) : (
-				<div class="empty-state">
+				<div class="empty-state animate-fade-up delay-2">
 					<span class="empty-prompt">$ cat blog/*.md</span>
 					<p class="empty-text">cat: blog/*.md: No such file or directory</p>
 				</div>
@@ -75,7 +78,7 @@ const posts = (await getCollection('blog')).sort(
 		border-radius: var(--radius);
 		text-decoration: none;
 		color: inherit;
-		transition: border-color var(--transition), background var(--transition), transform 200ms ease;
+		transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 	}
 
 	.blog-item:hover {

@@ -16,25 +16,25 @@ import profilePic from "../assets/profile.jpeg";
   <body>
     <Header />
     <main>
-      <nav class="breadcrumb">
+      <nav class="breadcrumb animate-fade-up delay-1">
         <a href="/">~</a>
         <span class="sep">/</span>
         <span>about</span>
       </nav>
 
       <section class="about">
-        <div class="profile">
-          <Image src={profilePic} alt="Profile Picture" class="profile-pic" />
+        <div class="profile animate-fade-up delay-2">
+          <Image src={profilePic} alt="Profile Picture" class="profile-pic" transition:name="profile-pic" />
         </div>
         <div class="content">
-          <h1 class="about-name">Lokesh Shelva</h1>
-          <p class="about-handle">@halovessel</p>
-          <p class="about-location">
+          <h1 class="about-name animate-fade-up delay-2">Lokesh Shelva</h1>
+          <p class="about-handle animate-fade-up delay-3">@halovessel</p>
+          <p class="about-location animate-fade-up delay-3">
             <Icon name="lucide:map-pin" size="14" />
             Bangalore, India
           </p>
 
-          <div class="about-body">
+          <div class="about-body animate-fade-up delay-4">
             <p>
               Developer and builder, exploring the intersection of software and
               creativity. I build tools, ship projects, and write about the
@@ -46,12 +46,12 @@ import profilePic from "../assets/profile.jpeg";
             </p>
           </div>
 
-          <a href="/lokesh-resume.pdf" download class="cv-button">
+          <a href="/lokesh-resume.pdf" download class="cv-button animate-fade-up delay-5">
             <Icon name="lucide:download" size="18" />
             Download CV
           </a>
 
-          <div class="about-links">
+          <div class="about-links animate-fade-up delay-6">
             {
               SOCIAL_LINKS.map((link) => (
                 <a
@@ -159,13 +159,15 @@ import profilePic from "../assets/profile.jpeg";
     border-radius: var(--radius);
     text-decoration: none;
     transition:
-      border-color var(--transition),
-      color var(--transition);
+      border-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s ease;
   }
 
   .social-link:hover {
     border-color: var(--fg-dim);
     color: var(--fg);
+    transform: translateY(-2px);
   }
 
   .cv-button {
@@ -180,11 +182,12 @@ import profilePic from "../assets/profile.jpeg";
     border-radius: var(--radius);
     text-decoration: none;
     margin-bottom: 1rem;
-    transition: opacity var(--transition);
+    transition: opacity 0.2s ease, transform 0.2s ease;
   }
 
   .cv-button:hover {
     opacity: 0.9;
+    transform: translateY(-1px);
   }
 
   @media (max-width: 640px) {

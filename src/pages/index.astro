@@ -4,6 +4,7 @@ import BaseHead from '../components/BaseHead.astro';
 import BlogCard from '../components/BlogCard.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import ScrollReveal from '../components/ScrollReveal.astro';
 import { SITE_DESCRIPTION, SITE_TITLE, SOCIAL_LINKS } from '../consts';
 import { Icon } from 'astro-icon/components';
 
@@ -23,23 +24,23 @@ const bentoSizes = ['large', 'tall', 'small', 'small', 'medium', 'small'];
 	<body>
 		<Header />
 		<main class="home-main">
-			<!-- Hero + Posts split -->
 			<section class="hero-split">
+				<!-- Hero with entrance animations -->
 				<div class="hero-content">
-					<div class="prompt">
+					<div class="prompt animate-fade-up delay-1">
 						<span class="user">halovessel</span><span class="at">@</span><span class="host">lokesh</span><span class="colon">:</span><span class="path">~</span><span class="dollar"> $</span>
 					</div>
-					<h1 class="hero-cmd">
+					<h1 class="hero-cmd animate-fade-up delay-2">
 						build <span class="flag">--with</span> <span class="str">"passion"</span><span class="cursor"></span>
 					</h1>
-					<p class="hero-output">
+					<p class="hero-output animate-fade-up delay-3">
 						I'm Lokesh Shelva, developer and builder. Exploring code, shipping projects, and writing about the process. Everything starts at the terminal.
 					</p>
-					<div class="hero-links">
+					<div class="hero-links animate-fade-up delay-4">
 						<a href="/blog/" class="link-cmd link-primary">cat blog.md</a>
 						<a href="/about/" class="link-cmd link-ghost">whoami</a>
 					</div>
-					<div class="hero-social">
+					<div class="hero-social animate-fade-up delay-5">
 						{SOCIAL_LINKS.map(link => (
 							<a href={link.url} target={link.url.startsWith('mailto:') ? undefined : '_blank'} rel={link.url.startsWith('mailto:') ? undefined : 'noopener noreferrer'} class="hero-social-icon" aria-label={link.label} title={link.label}>
 								<Icon name={link.icon} size="20" />
@@ -49,40 +50,42 @@ const bentoSizes = ['large', 'tall', 'small', 'small', 'medium', 'small'];
 				</div>
 
 				<!-- Terminal divider -->
-				<div class="section-divider">
+				<div class="section-divider animate-fade-in delay-6">
 					<span class="divider-prompt">$</span>
 					<span class="divider-cmd">ls blogs/</span>
 					<span class="divider-line"></span>
 				</div>
 
-				<!-- Posts peek: partially visible to invite scrolling -->
-				<div class="posts-peek">
+				<!-- Posts with scroll-reveal -->
+				<ScrollReveal class="posts-peek reveal-stagger">
 					{posts.length > 0 ? (
 						<>
 							<div class="bento-grid">
 								{posts.map((post, i) => (
-									<BlogCard
-										title={post.data.title}
-										description={post.data.description}
-										date={post.data.pubDate}
-										tags={post.data.tags}
-										slug={post.id}
-										size={bentoSizes[i] || 'small'}
-									/>
+									<div class="reveal" style={`--reveal-i: ${i}`}>
+										<BlogCard
+											title={post.data.title}
+											description={post.data.description}
+											date={post.data.pubDate}
+											tags={post.data.tags}
+											slug={post.id}
+											size={bentoSizes[i] || 'small'}
+										/>
+									</div>
 								))}
 							</div>
-							<a href="/blog/" class="view-all">
+							<a href="/blog/" class="view-all reveal" style="--reveal-i: 6">
 								<span>View all posts</span>
 								<span class="arrow">→</span>
 							</a>
 						</>
 					) : (
-						<div class="empty-state">
+						<div class="empty-state reveal">
 							<span class="empty-prompt">$ ls blogs/</span>
 							<p class="empty-text">ls: cannot access 'blogs/': No such file or directory</p>
 						</div>
 					)}
-				</div>
+				</ScrollReveal>
 			</section>
 		</main>
 		<Footer />
@@ -111,32 +114,6 @@ const bentoSizes = ['large', 'tall', 'small', 'small', 'medium', 'small'];
 		justify-content: center;
 		padding: 3rem 0 2rem;
 		position: relative;
-	}
-
-	/* Dot grid pattern */
-	.hero-content::before {
-		content: '';
-		position: absolute;
-		inset: 0;
-		background-image: radial-gradient(circle, var(--fg-dim) 0.5px, transparent 0.5px);
-		background-size: 24px 24px;
-		opacity: 0.15;
-		pointer-events: none;
-		-webkit-mask-image: linear-gradient(to bottom, transparent, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.5) 70%, transparent);
-		mask-image: linear-gradient(to bottom, transparent, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.5) 70%, transparent);
-	}
-
-	/* Subtle purple glow */
-	.hero-content::after {
-		content: '';
-		position: absolute;
-		top: 30%;
-		left: -10%;
-		width: 60%;
-		height: 50%;
-		background: radial-gradient(ellipse, rgba(199, 160, 255, 0.06) 0%, transparent 70%);
-		pointer-events: none;
-		z-index: -1;
 	}
 
 	.prompt {
@@ -186,11 +163,12 @@ const bentoSizes = ['large', 'tall', 'small', 'small', 'medium', 'small'];
 		padding: 0.35rem;
 		color: var(--fg-dim);
 		text-decoration: none;
-		transition: color var(--transition);
+		transition: color 0.2s ease, transform 0.2s ease;
 	}
 
 	.hero-social-icon:hover {
 		color: var(--fg-muted);
+		transform: translateY(-2px);
 	}
 
 	.link-cmd {
@@ -202,7 +180,7 @@ const bentoSizes = ['large', 'tall', 'small', 'small', 'medium', 'small'];
 		font-size: 0.8rem;
 		text-decoration: none;
 		border-radius: var(--radius);
-		transition: all var(--transition), transform 200ms ease;
+		transition: all 0.2s ease, transform 0.2s ease;
 	}
 	.link-primary {
 		background: rgba(199, 160, 255, 0.08);
